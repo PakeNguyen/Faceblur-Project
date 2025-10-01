@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: faceblur-backend:local
+    container_name: faceblur-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_PATH=/app/models/face.pt
+      - ALLOWED_ORIGINS=http://localhost:3000
+      - YOLO_CONF=0.35
+      - JPEG_QUALITY=80
+    volumes:
+      - ./backend/app/models:/app/models
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: faceblur-frontend:local
+    container_name: faceblur-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
